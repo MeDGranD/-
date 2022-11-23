@@ -1,34 +1,44 @@
 #include <stdio.h>
-int Min(int x, int y){		//‘ункци€ дл€ сравнени€ двух чисел и нахождени€ минимального из них.
- if (x <= y) { return x; }
- else { return y; }
-}
+
+int Min(int x, int y);
+void FindMin(int number, int* mas);
+int SumReminders(int* mas);
+
 int main() {
 
- int count; //ѕеременна€ дл€ хранени€ количества данных.
- scanf_s("%i", &count);
- int remainders2[3] = { 100000000, 100000000, 100000000 }; //ћассив первых трех минимальных чисел с остатком 2 от делени€ на 3.
- int remainders0 = 100000000;							   //ѕеременна€ дл€ хранени€ минимального числа с остатком 0 от делени€ на 3.
- int remainders1[3] = { 100000000, 100000000, 100000000 }; //ћассив первых трех минимальных чисел с остатком 1 от делени€ на 3.
- int current_number;
+	int count;
+	scanf_s("%i", &count);
+	int remainders2[3] = { 100000000, 100000000, 100000000 };
+	int remainder0 = 100000000;
+	int remainders1[3] = { 100000000, 100000000, 100000000 };
+	int current_number;
 
- for (int i = 0; i < count; i++) {
-  scanf_s("%i", &current_number); //—читывание числа
+	for (int i = 0; i < count; i++) {
 
-  if (current_number % 3 == 0) { remainders0 = min(current_number, remainders0); } //ѕроверка: €вл€етьс€ ли число минимальным с остатком 0? и присвоение переменной минимального числа его значени€.
+		scanf_s("%i", &current_number);
 
-  if (current_number % 3 == 1) {
-   if (current_number < remainders1[0]) { remainders1[2] = remainders1[1]; remainders1[1] = remainders1[0]; remainders1[0] = current_number; } //ѕроверка: €вл€етьс€ ли число в тройке минимальных с отстком 1?
-   else if (current_number < remainders1[1]) { remainders1[2] = remainders1[1]; remainders1[1] = current_number; }							   //и последующа€ подстановка числа в массив минимальных чисел.
-   else if (current_number < remainders1[2]) { remainders1[2] = current_number; }
-  }
+		if (current_number % 3 == 0) { remainder0 = Min(current_number, remainder0); }
+		if (current_number % 3 == 1) { FindMin(current_number, remainders1); }
+		if (current_number % 3 == 2) { FindMin(current_number, remainders2); }
 
-  if (current_number % 3 == 2) {
-   if (current_number < remainders2[0]) { remainders2[2] = remainders2[1]; remainders2[1] = remainders2[0]; remainders2[0] = current_number; } //ѕроверка: €вл€етьс€ ли число в тройке минимальных с отстком 2?
-   else if (current_number < remainders2[1]) { remainders2[2] = remainders2[1]; remainders2[1] = current_number; }							   //и последующа€ подстановка числа в массив минимальных чисел.
-   else if (current_number < remainders2[2]) { remainders2[2] = current_number; }
-  }
- }
- printf("%i" , Min(Min(remainders1[0]+ remainders1[1]+ remainders1[2], (remainders1[0] + remainders2[0] + remainders0)), remainders2[0]+ remainders2[1]+ remainders2[2])); //¬ывод минимального из трех возможных сумм.
- return 0;
+	}
+	printf("%i" , Min(Min(SumReminders(remainders1), (remainders1[0] + remainders2[0] + remainder0)), SumReminders(remainders2)));
+	return 0;
+}
+
+void FindMin(int number, int* mas) {
+
+	if (number < mas[0]) { mas[2] = mas[1]; mas[1] = mas[0]; mas[0] = number; }
+	else if (number < mas[1]) { mas[2] = mas[1]; mas[1] = number; }
+	else if (number < mas[2]) { mas[2] = number; }
+
+}
+int Min(int x, int y) {
+	if (x <= y) { return x; }
+	else { return y; }
+}
+int SumReminders(int* mas){
+	int sum = 0;
+	for (int i = 0; i < 3; i++) { sum += mas[i]; }
+	return sum;
 }
