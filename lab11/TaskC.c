@@ -29,17 +29,24 @@ int is_dot(char c){
     return 0; 
 }
 
+int is_minus(char c){
+    if(c=='-'){ return 1; }
+    return 0;
+}
+
 void test(){
 
     assert(is_number('0'));
     assert(is_C('C'));
     assert(is_separator(' '));
     assert(is_dot('.'));
+    assert(is_minus('-'));
 
     assert(!is_number('C'));
     assert(!is_C('1'));
     assert(!is_separator('/'));
     assert(!is_dot('g'));
+    assert(!is_minus('+'));
 
 }
 
@@ -49,6 +56,7 @@ int main(){
 
     double temp, dot, z; //Температура (целая часть), дробная часть, кол-во разрядов в dot
     dot = temp = z = 0;
+    int negative = 0;
     char c;
 
     State state = Separator;
@@ -66,6 +74,10 @@ int main(){
                     temp = (c - '0'); 
                     state = Number; 
                 }
+                else if(is_minus(c)){
+                    negative = 1;
+                    state = Number;
+                }
                 else { state = Search; }
                 break;
 
@@ -75,7 +87,9 @@ int main(){
                     temp += (c - '0'); 
                 }
                 else if(is_C(c)){ //Окончание числа
-                    temp = temp*18/10 + 32;
+                    if(negative) { temp = -(temp*18/10) + 32; }
+                    else { temp = temp*18/10 + 32; }
+                    negative = 0;
                     state = EndNumber; 
                 }
                 else if(is_dot(c)){ //Проверка на наличие дробной части
