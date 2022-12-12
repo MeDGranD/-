@@ -78,6 +78,7 @@ int main(){
                     negative = 1;
                     state = Number;
                 }
+                else if(is_separator(c)){ continue; }
                 else { state = Search; }
                 break;
 
